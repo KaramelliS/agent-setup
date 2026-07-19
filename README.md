@@ -13,7 +13,7 @@ Orca-orchestrated cross-OS agent setup memory. Her agent (Windows / Linux / macO
 |----|----------|-----|-------|
 | Windows | term_476b68ef | OpenCode + Claude kurulum dökümantasyonu (Windows) | Beklemede |
 | Linux   | term_81482c51 | OpenCode + Claude kurulum dökümantasyonu (Linux)   | Beklemede |
-| macOS   | term_f8230bdc | OpenCode + Claude kurulum dökümantasyonu (macOS)   | Beklemede |
+| macOS   | term_f8230bdc | OpenCode + Claude kurulum dökümantasyonu (macOS)   | Tamamlandı |
 | Windows | venesus-c4    | Codex endpoint taraması + support                | Devam ediyor |
 
 ## Dosyalar
