@@ -1,12 +1,12 @@
-# Linux — OpenCode + Claude Code Kurulumu
+# Linux — OpenCode + Claude Code Setup
 
-_Status: TAMAMLANDI (venesus-c4)_
+_Status: DONE (venesus-c4)_
 
-## Gereksinimler
-- Ubuntu/Debian 22.04+ veya RHEL/Fedora 38+
-- Bash 5+ veya Zsh
+## Requirements
+- Ubuntu/Debian 22.04+ or RHEL/Fedora 38+
+- Bash 5+ or Zsh
 - cURL, git, Node.js 20+
-- GitHub CLI (`apt install gh` veya dnf)
+- GitHub CLI
 
 ```bash
 # Debian/Ubuntu
@@ -23,7 +23,7 @@ sudo dnf install -y nodejs git curl gh
 curl -fsSL https://opencode.ai/install | bash
 ```
 
-Doğrula:
+Verify:
 ```bash
 opencode --version
 ```
@@ -34,40 +34,42 @@ opencode --version
 npm install -g @anthropic-ai/claude-code
 ```
 
-Doğrula:
+Verify:
 ```bash
 claude --version
 ```
 
-İlk çalıştırmada oauth açılır.
+First run triggers OAuth.
 
-## 3. 9router API Config
+## 3. venesusai.lol API Config
+
+Production endpoint: `https://venesusai.lol/v1`. Get your key at https://venesusai.lol/auth/discord.
 
 ### OpenCode — `~/.config/opencode/config.json`
 ```json
 {
   "provider": {
-    "9router": {
+    "venesus": {
       "npm": "@ai-sdk/openai-compatible",
       "options": {
-        "baseURL": "http://89.47.113.13:20128/v1",
-        "apiKey": "sk-743245c6e167e4cd-hrtfc5-9a1b0fc0"
+        "baseURL": "https://venesusai.lol/v1",
+        "apiKey": "sk-YOUR-KEY"
       },
       "models": {
-        "claude-sonnet-5": { "title": "Sonnet 5 (9router)" },
-        "gpt-5.4":          { "title": "GPT-5.4 (9router)" },
-        "glm-5.2":          { "title": "GLM-5.2 (9router)" }
+        "ds/deepseek-v4-pro":  { "title": "DeepSeek V4 Pro" },
+        "zhipu/glm-5.2":       { "title": "GLM-5.2" },
+        "xai/grok-4.5":        { "title": "Grok 4.5" }
       }
     }
   }
 }
 ```
 
-### Claude Code — `~/.bashrc` veya `~/.zshrc`
+### Claude Code — `~/.bashrc` or `~/.zshrc`
 ```bash
-export ANTHROPIC_BASE_URL=http://89.47.113.13:20128
-export ANTHROPIC_API_KEY=sk-743245c6e167e4cd-hrtfc5-9a1b0fc0
-export ANTHROPIC_MODEL=claude-sonnet-5
+export ANTHROPIC_BASE_URL=https://venesusai.lol
+export ANTHROPIC_API_KEY=sk-YOUR-KEY
+export ANTHROPIC_MODEL=anthropic/claude-opus-4-8
 ```
 
 ## 4. Orca CLI
@@ -76,19 +78,19 @@ export ANTHROPIC_MODEL=claude-sonnet-5
 curl -fsSL https://get.orca.dev/install | bash
 ```
 
-Doğrula:
+Verify:
 ```bash
 orca --version
 orca status
 ```
 
-Skill auto-load: `~/.agents/skills/orca-cli/SKILL.md` description başına `Automatically loaded at the start of every session...` ekle.
+Mandatory skill auto-load: prepend the description line of `~/.agents/skills/orca-cli/SKILL.md` with `Automatically loaded at the start of every session...`.
 
-## 5. Test Komutları
+## 5. Test Commands
 
 ```bash
-# 9router connectivity
-curl -s -m 10 -H "Authorization: Bearer sk-743245c6e167e4cd-hrtfc5-9a1b0fc0" http://89.47.113.13:20128/v1/models
+# venesusai.lol connectivity
+curl -s -m 10 -H "Authorization: Bearer sk-YOUR-KEY" https://venesusai.lol/v1/models
 
 # OpenCode
 opencode --version
@@ -103,7 +105,7 @@ orca terminal list
 orca orchestration inbox
 ```
 
-## SSH (opsiyonel)
+## SSH (optional)
 ```bash
 # ~/.ssh/config
 Host mc
@@ -112,9 +114,4 @@ Host mc
     User root
     IdentityFile ~/.ssh/mc_server
     StrictHostKeyChecking no
-```
-
-9router port 20128 dışarıdan kapalı (firewall). Server üzerinde localhost'tan erişilir. SSH tüneli:
-```bash
-ssh -L 20128:127.0.0.1:20128 mc
 ```

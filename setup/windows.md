@@ -1,34 +1,31 @@
-# Windows — OpenCode + Claude Code Kurulumu
+# Windows — OpenCode + Claude Code Setup
 
-_Status: TAMAMLANDI (venesus-c4)_
+_Status: DONE (venesus-c4)_
 
-## Gereksinimler
-- Windows 10/11 veya Windows Server 2019+
-- PowerShell 5.1+ (yerleşik) veya PowerShell 7
+## Requirements
+- Windows 10/11 or Windows Server 2019+
+- PowerShell 5.1+ (built-in) or PowerShell 7
 - Node.js 20+ (`winget install OpenJS.NodeJS.LTS`)
 - Git (`winget install Git.Git`)
 - GitHub CLI (`winget install GitHub.cli`) + `gh auth login`
-- 7-Zip (isteğe bağlı, arşiv çıktıları için)
 
 ## 1. OpenCode (Windows Native)
 
-OpenCode tek dosya binary; herhangi paket yöneticisi gerekmez.
+Single-file binary, no package manager needed.
 
 ```powershell
-# PowerShell (yönetici gerekmez)
 irm https://opencode.ai/install.ps1 | iex
 ```
 
-Doğrula:
+Verify:
 ```powershell
 opencode --version
 ```
 
-### WSL2 varyantı (opsiyonel)
-Eğer Linux ortamını Windows içinde istiyorsan:
+### WSL2 variant (optional)
 ```powershell
 wsl --install -d Ubuntu
-# WSL içinde:
+# Inside WSL:
 curl -fsSL https://opencode.ai/install | bash
 ```
 
@@ -38,71 +35,70 @@ curl -fsSL https://opencode.ai/install | bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-Doğrula:
+Verify:
 ```powershell
 claude --version
 ```
 
-İlk çalıştırmada tarayıcı oauth açılır; `KaramelliS` GitHub hesabınla login ol.
+First run opens OAuth in browser; log in with `KaramelliS` GitHub account.
 
-## 3. 9router API Config
+## 3. venesusai.lol API Config
 
-9router production gateway'ine yönlendir. Her iki CLI için de aynı key.
+Production endpoint: `https://venesusai.lol/v1`. Get your key at https://venesusai.lol/auth/discord.
 
-### OpenCode — `~/.config/opencode/config.json` (veya `%USERPROFILE%\.config\opencode\config.json`)
+### OpenCode — `%USERPROFILE%\.config\opencode\config.json`
 ```json
 {
   "provider": {
-    "9router": {
+    "venesus": {
       "npm": "@ai-sdk/openai-compatible",
       "options": {
-        "baseURL": "http://89.47.113.13:20128/v1",
-        "apiKey": "sk-743245c6e167e4cd-hrtfc5-9a1b0fc0"
+        "baseURL": "https://venesusai.lol/v1",
+        "apiKey": "sk-YOUR-KEY"
       },
       "models": {
-        "claude-sonnet-5": { "title": "Sonnet 5 (9router)" },
-        "gpt-5.4":          { "title": "GPT-5.4 (9router)" },
-        "glm-5.2":          { "title": "GLM-5.2 (9router)" }
+        "ds/deepseek-v4-pro":  { "title": "DeepSeek V4 Pro" },
+        "zhipu/glm-5.2":       { "title": "GLM-5.2" },
+        "xai/grok-4.5":        { "title": "Grok 4.5" }
       }
     }
   }
 }
 ```
 
-### Claude Code — ortam değişkeni (PowerShell profile'a ekle)
+### Claude Code — PowerShell profile
 ```powershell
-$env:ANTHROPIC_BASE_URL = "http://89.47.113.13:20128"
-$env:ANTHROPIC_API_KEY  = "sk-743245c6e167e4cd-hrtfc5-9a1b0fc0"
-$env:ANTHROPIC_MODEL    = "claude-sonnet-5"
+$env:ANTHROPIC_BASE_URL = "https://venesusai.lol"
+$env:ANTHROPIC_API_KEY  = "sk-YOUR-KEY"
+$env:ANTHROPIC_MODEL    = "anthropic/claude-opus-4-8"
 ```
-Kalıcı için:
+Persist:
 ```powershell
-[Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL","http://89.47.113.13:20128","User")
-[Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY","sk-743245c6e167e4cd-hrtfc5-9a1b0fc0","User")
+[Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL","https://venesusai.lol","User")
+[Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY","sk-YOUR-KEY","User")
 ```
 
 ## 4. Orca CLI
 
-Orca Windows installer'ı:
 ```powershell
 winget install Orca.Orca
-# veya
+# or
 irm https://get.orca.dev/install.ps1 | iex
 ```
 
-Doğrula:
+Verify:
 ```powershell
 orca --version
 orca status
 ```
 
-Skill auto-load (zorunlu): `%USERPROFILE%\.agents\skills\orca-cli\SKILL.md` dosyasının description satırına `Automatically loaded at the start of every session...` ekle.
+Mandatory skill auto-load: prepend the description line of `%USERPROFILE%\.agents\skills\orca-cli\SKILL.md` with `Automatically loaded at the start of every session...`.
 
-## 5. Test Komutları
+## 5. Test Commands
 
 ```powershell
-# 9router connectivity
-curl.exe -s -m 10 -H "Authorization: Bearer sk-743245c6e167e4cd-hrtfc5-9a1b0fc0" http://89.47.113.13:20128/v1/models
+# venesusai.lol connectivity
+curl.exe -s -m 10 -H "Authorization: Bearer sk-YOUR-KEY" https://venesusai.lol/v1/models
 
 # OpenCode
 opencode --version
@@ -117,7 +113,7 @@ orca terminal list
 orca orchestration inbox
 ```
 
-## SSH (opsiyonel, server erişimi)
+## SSH (optional, server access)
 ```powershell
 # ~/.ssh/config
 Host mc
@@ -128,8 +124,4 @@ Host mc
     StrictHostKeyChecking no
 ```
 
-Not: 9router'un 20128 portu dışarıdan erişime kapalı (firewall). Localhost'tan çağırılır. Dışarıdan bağlantı için SSH tüneli:
-```powershell
-ssh -L 20128:127.0.0.1:20128 mc
-# sonra http://localhost:20128/v1 kullan
-```
+Note: port 20128 (9router internal) is not exposed externally. venesusai.lol is the public API surface.

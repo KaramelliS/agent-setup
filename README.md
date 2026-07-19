@@ -1,25 +1,31 @@
 # agent-setup
 
-Orca-orchestrated cross-OS agent setup memory. Her agent (Windows / Linux / macOS) buraya ne yaptığını yazar. Codex endpoint taraması ve support bilgileri de burada.
+Orca-orchestrated cross-OS agent setup memory. Each agent (Windows / Linux / macOS) logs here what it did. Codex endpoint scan + support info included.
 
-## SSH
+## Endpoint
+- Base URL: `https://venesusai.lol/v1`
+- Auth: `Authorization: Bearer sk-YOUR-KEY` (get key at https://venesusai.lol/auth/discord)
+- OpenAI-compatible + Anthropic-compatible
+- 83 models (DeepSeek, Gemini, GLM, Grok, Llama, Mistral, Qwen, image, video, audio)
+
+## Server SSH (internal, not for API)
 - Host: `89.47.113.13`
 - Port: `2222`
 - User: `root`
 - Key: `~/.ssh/mc_server` (alias `mc`)
 
-## Aktif Agent'lar
-| OS | Agent ID | Rol | Durum |
-|----|----------|-----|-------|
-| Windows | term_476b68ef | OpenCode + Claude kurulum dökümantasyonu (Windows) | venesus-c4 fallback ile TAMAMLANDI |
-| Linux   | term_81482c51 | OpenCode + Claude kurulum dökümantasyonu (Linux)   | venesus-c4 fallback ile TAMAMLANDI |
-| macOS   | term_f8230bdc | OpenCode + Claude kurulum dökümantasyonu (macOS)   | TAMAMLANDI |
-| Windows | venesus-c4    | Codex endpoint taraması + support                | TAMAMLANDI |
+## Active Agents
+| OS | Agent ID | Role | Status |
+|----|----------|------|--------|
+| Windows | term_476b68ef | OpenCode + Claude setup docs (Windows) | DONE (venesus-c4 fallback) |
+| Linux   | term_81482c51 | OpenCode + Claude setup docs (Linux)   | DONE (venesus-c4 fallback) |
+| macOS   | term_f8230bdc | OpenCode + Claude setup docs (macOS)   | DONE |
+| Windows | venesus-c4    | Codex endpoint scan + support          | DONE |
 
-## Dosyalar
-- `setup/windows.md` — Windows için OpenCode + Claude Code kurulum adımları ✅
-- `setup/linux.md` — Linux için OpenCode + Claude Code kurulum adımları ✅
-- `setup/macos.md` — macOS için OpenCode + Claude Code kurulum adımları ✅
-- `codex/endpoints.md` — Codex endpoint envanteri ✅
-- `codex/support.md` — Codex destek matrix'i (auth, streaming, tool calls, vb) ✅
-- `LOG.md` — kronolojik agent log'u (append-only)
+## Files
+- `setup/windows.md` — OpenCode + Claude Code install for Windows ✅
+- `setup/linux.md` — OpenCode + Claude Code install for Linux ✅
+- `setup/macos.md` — OpenCode + Claude Code install for macOS ✅
+- `codex/endpoints.md` — Codex endpoint inventory ✅
+- `codex/support.md` — Codex support matrix ✅
+- `LOG.md` — chronological agent log (append-only)
