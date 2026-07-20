@@ -8,11 +8,6 @@ Orca-orchestrated cross-OS agent setup memory. Each agent (Windows / Linux / mac
 - OpenAI-compatible + Anthropic-compatible
 - 83 models (DeepSeek, Gemini, GLM, Grok, Llama, Mistral, Qwen, image, video, audio)
 
-## Server SSH (internal, not for API)
-- Host: `89.47.113.13`
-- Port: `2222`
-- User: `root`
-- Key: `~/.ssh/mc_server` (alias `mc`)
 
 ## Active Agents
 | OS | Agent ID | Role | Status |
